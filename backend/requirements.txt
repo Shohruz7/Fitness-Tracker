@@ -1,0 +1,13 @@
+Django>=4.2
+djangorestframework
+django-environ
+psycopg[binary]>=2.9
+gunicorn
+django-cors-headers
+python-dotenv
+dj-database-url
+cryptography
+whitenoise
+djangorestframework-simplejwt
+celery[redis]    # optional - only if using Celery
+redis            # optional client
