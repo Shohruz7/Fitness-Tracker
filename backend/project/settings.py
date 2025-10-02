@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     "workouts",
 ]
 
+# Custom User Model
+AUTH_USER_MODEL = 'workouts.User'
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -86,7 +89,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
     raise RuntimeError("DATABASE_URL not set")
 DATABASES = {
-    "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
+    "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=False)
 }
 
 # -----------------------------------------------------------------------------
@@ -122,7 +125,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # -----------------------------------------------------------------------------
 # CORS
 # -----------------------------------------------------------------------------
-CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:3001").split(",")
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = True
 
 # -----------------------------------------------------------------------------
 # Django REST Framework & Simple JWT
