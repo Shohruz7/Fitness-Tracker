@@ -26,6 +26,10 @@ if not SECRET_KEY:
 
 DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+# Allow all hosts in production if needed (better to specify exact hosts)
+if not DEBUG:
+    ALLOWED_HOSTS.extend(os.getenv("ALLOWED_HOSTS_EXTRA", "").split(","))
+    ALLOWED_HOSTS = [h for h in ALLOWED_HOSTS if h]  # Remove empty strings
 
 # -----------------------------------------------------------------------------
 # Application definition
@@ -86,11 +90,18 @@ WSGI_APPLICATION = "project.wsgi.application"
 # Database (Supabase Postgres via DATABASE_URL)
 # -----------------------------------------------------------------------------
 DATABASE_URL = os.getenv("DATABASE_URL")
-if not DATABASE_URL:
-    raise RuntimeError("DATABASE_URL not set")
-DATABASES = {
-    "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=False)
-}
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
+    }
+else:
+    # Fallback to SQLite for local development if DATABASE_URL not set
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 # -----------------------------------------------------------------------------
 # Password validation
@@ -127,7 +138,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # -----------------------------------------------------------------------------
 CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:3001").split(",")
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_ALL_ORIGINS = True
+# Only allow all origins in development
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    CORS_ALLOW_ALL_ORIGINS = False
 
 # -----------------------------------------------------------------------------
 # Django REST Framework & Simple JWT

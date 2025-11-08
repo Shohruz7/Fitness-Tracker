@@ -12,8 +12,13 @@ const Charts = () => {
   useEffect(() => {
     const fetchWorkouts = async () => {
       try {
+        setIsLoading(true);
         const response = await workoutAPI.getWorkouts({ limit: 100 });
-        setWorkouts(response.data.results || []);
+        // Handle both paginated and non-paginated responses
+        const workoutsData = Array.isArray(response.data) 
+          ? response.data 
+          : (response.data.results || []);
+        setWorkouts(workoutsData);
       } catch (error) {
         console.error('Error fetching workouts:', error);
         setError('Failed to load workout data');
@@ -64,8 +69,52 @@ const Charts = () => {
     }));
   };
 
+  // Get weekly statistics
+  const getWeeklyStats = () => {
+    if (!workouts.length) return null;
+
+    const now = new Date();
+    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+    const weekWorkouts = workouts.filter(w => new Date(w.date) >= weekAgo);
+    const monthWorkouts = workouts.filter(w => new Date(w.date) >= monthAgo);
+
+    return {
+      week: {
+        count: weekWorkouts.length,
+        duration: weekWorkouts.reduce((sum, w) => sum + (w.duration || 0), 0),
+        distance: weekWorkouts.reduce((sum, w) => sum + (w.distance || 0), 0),
+      },
+      month: {
+        count: monthWorkouts.length,
+        duration: monthWorkouts.reduce((sum, w) => sum + (w.duration || 0), 0),
+        distance: monthWorkouts.reduce((sum, w) => sum + (w.distance || 0), 0),
+      },
+    };
+  };
+
+  // Get average statistics
+  const getAverageStats = () => {
+    if (!workouts.length) return null;
+
+    const workoutsWithDuration = workouts.filter(w => w.duration);
+    const workoutsWithDistance = workouts.filter(w => w.distance);
+
+    return {
+      duration: workoutsWithDuration.length > 0
+        ? Math.round(workoutsWithDuration.reduce((sum, w) => sum + (w.duration || 0), 0) / workoutsWithDuration.length)
+        : 0,
+      distance: workoutsWithDistance.length > 0
+        ? (workoutsWithDistance.reduce((sum, w) => sum + (w.distance || 0), 0) / workoutsWithDistance.length).toFixed(1)
+        : 0,
+    };
+  };
+
   const chartData = processChartData();
   const workoutTypeData = getWorkoutTypeData();
+  const weeklyStats = getWeeklyStats();
+  const averageStats = getAverageStats();
 
   if (isLoading) {
     return (
@@ -96,7 +145,7 @@ const Charts = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Fitness Analytics</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Fitness Analysis</h1>
           <p className="mt-2 text-gray-600">
             Track your progress and analyze your workout patterns
           </p>
@@ -197,7 +246,7 @@ const Charts = () => {
             )}
 
             {/* Summary Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               <div className="bg-white shadow rounded-lg p-6">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
@@ -251,7 +300,72 @@ const Charts = () => {
                   </div>
                 </div>
               </div>
+
+              {averageStats && (
+                <div className="bg-white shadow rounded-lg p-6">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <span className="text-2xl">📊</span>
+                    </div>
+                    <div className="ml-5 w-0 flex-1">
+                      <dl>
+                        <dt className="text-sm font-medium text-gray-500 truncate">
+                          Avg Duration
+                        </dt>
+                        <dd className="text-lg font-medium text-gray-900">
+                          {averageStats.duration}min
+                        </dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
+
+            {/* Weekly and Monthly Stats */}
+            {weeklyStats && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div className="bg-white shadow rounded-lg p-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Last 7 Days</h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Workouts:</span>
+                      <span className="text-sm font-medium text-gray-900">{weeklyStats.week.count}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Duration:</span>
+                      <span className="text-sm font-medium text-gray-900">{Math.round(weeklyStats.week.duration / 60)}h {weeklyStats.week.duration % 60}min</span>
+                    </div>
+                    {weeklyStats.week.distance > 0 && (
+                      <div className="flex justify-between">
+                        <span className="text-sm text-gray-600">Distance:</span>
+                        <span className="text-sm font-medium text-gray-900">{weeklyStats.week.distance.toFixed(1)}km</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="bg-white shadow rounded-lg p-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Last 30 Days</h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Workouts:</span>
+                      <span className="text-sm font-medium text-gray-900">{weeklyStats.month.count}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Duration:</span>
+                      <span className="text-sm font-medium text-gray-900">{Math.round(weeklyStats.month.duration / 60)}h {weeklyStats.month.duration % 60}min</span>
+                    </div>
+                    {weeklyStats.month.distance > 0 && (
+                      <div className="flex justify-between">
+                        <span className="text-sm text-gray-600">Distance:</span>
+                        <span className="text-sm font-medium text-gray-900">{weeklyStats.month.distance.toFixed(1)}km</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

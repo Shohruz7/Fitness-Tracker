@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { workoutAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Logo from '../components/Logo';
@@ -8,28 +8,37 @@ const WorkoutList = () => {
   const [workouts, setWorkouts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const location = useLocation();
+
+  const fetchWorkouts = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await workoutAPI.getWorkouts();
+      // Handle both paginated (results) and non-paginated responses
+      const workoutsData = Array.isArray(response.data) 
+        ? response.data 
+        : (response.data.results || []);
+      setWorkouts(workoutsData);
+    } catch (error) {
+      console.error('Error fetching workouts:', error);
+      setError('Failed to load workouts');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchWorkouts = async () => {
-      try {
-        const response = await workoutAPI.getWorkouts();
-        setWorkouts(response.data.results || []);
-      } catch (error) {
-        console.error('Error fetching workouts:', error);
-        setError('Failed to load workouts');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchWorkouts();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this workout?')) {
       try {
         await workoutAPI.deleteWorkout(id);
-        setWorkouts(workouts.filter(workout => workout.id !== id));
+        // Refetch workouts to ensure consistency
+        await fetchWorkouts();
       } catch (error) {
         console.error('Error deleting workout:', error);
         alert('Failed to delete workout');
@@ -72,19 +81,28 @@ const WorkoutList = () => {
               Track and manage your workout sessions
             </p>
           </div>
-          <Link
-            to="/workouts/new"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
-          >
-            Add Workout
-          </Link>
+          <div className="flex space-x-3">
+            <button
+              onClick={fetchWorkouts}
+              disabled={isLoading}
+              className="bg-gray-600 hover:bg-gray-700 disabled:opacity-50 text-white px-4 py-2 rounded-md text-sm font-medium"
+            >
+              {isLoading ? 'Loading...' : 'Refresh'}
+            </button>
+            <Link
+              to="/workouts/new"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+            >
+              Add Workout
+            </Link>
+          </div>
         </div>
 
         {/* Workouts List */}
         {workouts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {workouts.map((workout) => (
-              <div key={workout.id} className="bg-white overflow-hidden shadow rounded-lg">
+              <div key={workout.id} className="bg-white overflow-hidden shadow-lg rounded-xl card-hover animate-fadeIn">
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-medium text-gray-900 capitalize">
