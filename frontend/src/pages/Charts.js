@@ -248,56 +248,50 @@ const Charts = () => {
             {/* Summary Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               <div className="bg-white shadow rounded-lg p-6">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <span className="text-2xl">📅</span>
+                <div className="flex flex-col items-center justify-center text-center">
+                  <div className="mb-2">
+                    <span className="text-3xl">🏋️</span>
                   </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
-                        Total Workouts
-                      </dt>
-                      <dd className="text-lg font-medium text-gray-900">
-                        {workouts.length}
-                      </dd>
-                    </dl>
-                  </div>
+                  <dl>
+                    <dt className="text-sm font-medium text-gray-500">
+                      Total Workouts
+                    </dt>
+                    <dd className="text-2xl font-bold text-gray-900 mt-1">
+                      {workouts.length}
+                    </dd>
+                  </dl>
                 </div>
               </div>
 
               <div className="bg-white shadow rounded-lg p-6">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <span className="text-2xl">⏱️</span>
+                <div className="flex flex-col items-center justify-center text-center">
+                  <div className="mb-2">
+                    <span className="text-3xl">⏱️</span>
                   </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
-                        Total Duration
-                      </dt>
-                      <dd className="text-lg font-medium text-gray-900">
-                        {Math.round(workouts.reduce((sum, workout) => sum + (workout.duration || 0), 0) / 60)}h
-                      </dd>
-                    </dl>
-                  </div>
+                  <dl>
+                    <dt className="text-sm font-medium text-gray-500">
+                      Total Duration
+                    </dt>
+                    <dd className="text-2xl font-bold text-gray-900 mt-1">
+                      {Math.round(workouts.reduce((sum, workout) => sum + (workout.duration || 0), 0) / 60)}h
+                    </dd>
+                  </dl>
                 </div>
               </div>
 
               <div className="bg-white shadow rounded-lg p-6">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <span className="text-2xl">🏃</span>
+                <div className="flex flex-col items-center justify-center text-center">
+                  <div className="mb-2">
+                    <span className="text-3xl">🏃</span>
                   </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
-                        Total Distance
-                      </dt>
-                      <dd className="text-lg font-medium text-gray-900">
-                        {workouts.reduce((sum, workout) => sum + (workout.distance || 0), 0).toFixed(1)}km
-                      </dd>
-                    </dl>
-                  </div>
+                  <dl>
+                    <dt className="text-sm font-medium text-gray-500">
+                      Total Distance
+                    </dt>
+                    <dd className="text-2xl font-bold text-gray-900 mt-1">
+                      {workouts.reduce((sum, workout) => sum + (workout.distance || 0), 0).toFixed(1)}km
+                    </dd>
+                  </dl>
                 </div>
               </div>
 

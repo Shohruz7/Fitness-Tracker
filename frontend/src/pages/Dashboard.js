@@ -57,80 +57,72 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg transition-colors duration-200">
               <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <span className="text-2xl">🏋️</span>
+                <div className="flex flex-col items-center justify-center text-center">
+                  <div className="mb-2">
+                    <span className="text-3xl">🏋️</span>
                   </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
-                        Total Workouts
-                      </dt>
-                      <dd className="text-lg font-medium text-gray-900 dark:text-white">
-                        {stats.total_workouts || 0}
-                      </dd>
-                    </dl>
-                  </div>
+                  <dl>
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                      Total Workouts
+                    </dt>
+                    <dd className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
+                      {stats.total_workouts || 0}
+                    </dd>
+                  </dl>
                 </div>
               </div>
             </div>
 
             <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg transition-colors duration-200">
               <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <span className="text-2xl">⏱️</span>
+                <div className="flex flex-col items-center justify-center text-center">
+                  <div className="mb-2">
+                    <span className="text-3xl">⏱️</span>
                   </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
-                        Total Duration
-                      </dt>
-                      <dd className="text-lg font-medium text-gray-900 dark:text-white">
-                        {stats.total_duration ? `${Math.round(stats.total_duration / 60)}h` : '0h'}
-                      </dd>
-                    </dl>
-                  </div>
+                  <dl>
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                      Total Duration
+                    </dt>
+                    <dd className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
+                      {stats.total_duration ? `${Math.round(stats.total_duration / 60)}h` : '0h'}
+                    </dd>
+                  </dl>
                 </div>
               </div>
             </div>
 
             <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg transition-colors duration-200">
               <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <span className="text-2xl">🏃</span>
+                <div className="flex flex-col items-center justify-center text-center">
+                  <div className="mb-2">
+                    <span className="text-3xl">🏃</span>
                   </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
-                        Total Distance
-                      </dt>
-                      <dd className="text-lg font-medium text-gray-900 dark:text-white">
-                        {stats.total_distance ? `${stats.total_distance}km` : '0km'}
-                      </dd>
-                    </dl>
-                  </div>
+                  <dl>
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                      Total Distance
+                    </dt>
+                    <dd className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
+                      {stats.total_distance ? `${stats.total_distance}km` : '0km'}
+                    </dd>
+                  </dl>
                 </div>
               </div>
             </div>
 
             <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg transition-colors duration-200">
               <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <span className="text-2xl">💪</span>
+                <div className="flex flex-col items-center justify-center text-center">
+                  <div className="mb-2">
+                    <span className="text-3xl">💪</span>
                   </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
-                        Personal Records
-                      </dt>
-                      <dd className="text-lg font-medium text-gray-900 dark:text-white">
-                        {stats.personal_records || 0}
-                      </dd>
-                    </dl>
-                  </div>
+                  <dl>
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                      Personal Records
+                    </dt>
+                    <dd className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
+                      {stats.personal_records || 0}
+                    </dd>
+                  </dl>
                 </div>
               </div>
             </div>
