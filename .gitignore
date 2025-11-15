@@ -113,6 +113,6 @@ env/
 
 # Railway
 .railway
-
-# Deployment configs (keep deployment docs, but ignore local deployment files)
+DEPLOYMENT.md
+DEPLOYMENT_CHECKLIST.md
 *.deploy.local
