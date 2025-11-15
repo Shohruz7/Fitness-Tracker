@@ -98,8 +98,21 @@ pids/
 tmp/
 temp/
 
+# Test/Development directories
+frontend-new/
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+.ENV/
+
 # Vercel
 .vercel
 
 # Railway
 .railway
+
+# Deployment configs (keep deployment docs, but ignore local deployment files)
+*.deploy.local
